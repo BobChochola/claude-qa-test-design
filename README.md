@@ -85,25 +85,35 @@ Note the source column. The rule that failed came from a comment, not the AC bod
 
 When you only ask for design, Actual is empty and every Result is `Not Run`.
 
+## Where to run it
+
+The plugin isn't a smarter Claude. It's a way of packaging the same skill: same model, same `SKILL.md`, same reading rules. What changes the result is **what the environment lets Claude reach**: your logged-in Jira, Notion and staging tabs, and the test environment itself.
+
+| Where you run it | Reads your logged-in tabs | Drives the test environment | Re-check hook | Best for |
+|---|---|---|---|---|
+| **Claude in Chrome side panel** + `.skill` | ✅ Reads the tab group directly | ✅ Clicks and fills forms with your login | ❌ Relies on the rule in `SKILL.md` | Trying it out; one person, one ticket |
+| **Claude Code** (`claude --chrome`) or **Cowork** + plugin | ✅ Through the same Chrome integration | ✅ Same as the side panel | ✅ | Daily use and teams: hook, version number, one build for everyone |
+| **claude.ai** without browser integration + `.skill` | ❌ Only what you paste in | ❌ | ❌ | Test design from pasted requirements only |
+
+So the combination that works best is **browser integration + this skill**. Installing it as a plugin adds reliability and version control on top. It doesn't make Claude read better.
+
 ## Install
 
-There are two ways to install it. **The plugin is the recommended one**, especially for a team.
+There are two ways to install it. **For a team, use the plugin.** For a quick try in the Chrome side panel, the `.skill` file is enough.
 
-### Why the plugin
-
-The `.skill` file gives Claude the instructions. The plugin gives Claude the instructions plus the parts that keep them working in a long session:
+### Plugin vs `.skill`
 
 | | Plugin | `.skill` upload |
 |---|---|---|
 | Skill instructions | ✅ | ✅ |
 | Re-check hook | ✅ Checks every message you send. When you say *"added to the group"* or *"check again"*, Claude gets a reminder to re-inventory the tabs before it replies | ❌ Depends on Claude remembering a rule from the skill text, deep into a long session |
 | Version number | ✅ `plugin.json` carries a version, so you can tell which build each person is on | ❌ No version; it's easy to end up with two copies of `qa-test-design` that compete with each other |
-| Team rollout | ✅ One folder to share, the same build for everyone | ⚠️ Each person uploads and updates the file by hand |
-| Where it runs | Claude Code (with Chrome), Cowork | claude.ai web, desktop and the Chrome side panel |
+| Team rollout | ✅ One install line, the same build for everyone | ⚠️ Each person uploads and updates the file by hand |
+| Where it runs | Claude Code (with `--chrome`), Cowork | claude.ai web, desktop and the Chrome side panel |
 
 The re-check hook matters more than it looks. A typical session is long: reading the ticket, the subtasks, two rounds of questions, then running the tests. By the time you drag in a spec page you forgot, the original instructions are far back in the conversation. The hook doesn't rely on Claude remembering them. It sees the phrase in your message and puts the reminder right next to it.
 
-If your team only uses Claude in the browser, the `.skill` file works. The re-check rule is in the skill text too, so it still re-inventories when you ask, just less reliably.
+Without the hook, the re-check rule is still in the skill text, so it still re-inventories when you ask, just less reliably.
 
 ### What you need
 
@@ -118,7 +128,7 @@ If your team only uses Claude in the browser, the `.skill` file works. The re-ch
 
 When it falls back to the browser, it tells you which sources it read that way.
 
-### Option A: Plugin (Claude Code, Cowork), recommended
+### Option A: Plugin (Claude Code, Cowork), recommended for teams
 
 In Claude Code (2.1.275 or later):
 
@@ -217,6 +227,17 @@ re-check the tabs
 ```
 
 The plugin hook matches a fixed list of phrases (see [`recheck_tabs.py`](hooks/scripts/recheck_tabs.py)). If you phrase it differently, the skill rule usually still catches it, but the hook won't add its reminder. Add your team's phrasing to the list if you need to.
+
+## For developers: self-test before handing off
+
+The skill isn't only for QA. A developer can run it on their own ticket before moving it to QA:
+
+1. Open the ticket, its subtasks and spec, and the dev or staging environment in one tab group.
+2. Run `/qa-test-design Read <ticket URL> and test it`.
+3. Answer its questions. They often surface what the developer assumed but the ticket never said.
+4. Fix what fails, then hand the ticket to QA with the spreadsheet attached.
+
+Developers and QA end up working from the same reading of the requirement, including the decisions buried in comments. QA starts from a list of known gaps instead of rediscovering them, and the review conversation moves from "did you consider…" to "here's what's still open".
 
 ## Guardrails
 
