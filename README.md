@@ -91,15 +91,15 @@ The plugin isn't a smarter Claude. It's a way of packaging the same skill: same 
 
 | Where you run it | Reads your logged-in tabs | Drives the test environment | Re-check hook | Best for |
 |---|---|---|---|---|
-| **Claude in Chrome side panel** + `.skill` | ✅ Reads the tab group directly | ✅ Clicks and fills forms with your login | ❌ Relies on the rule in `SKILL.md` | Trying it out; one person, one ticket |
-| **Claude Code** (`claude --chrome`) or **Cowork** + plugin | ✅ Through the same Chrome integration | ✅ Same as the side panel | ✅ | Daily use and teams: hook, version number, one build for everyone |
-| **claude.ai** without browser integration + `.skill` | ❌ Only what you paste in | ❌ | ❌ | Test design from pasted requirements only |
+| **Claude in Chrome side panel** + `.skill` | ✅ Reads the tab group directly | ✅ Clicks and fills forms with your login | ❌ Relies on the rule in `SKILL.md` | The main way to run this workflow |
+| **Claude Code / Cowork** + plugin | ⚠️ Only with browser integration (for Claude Code, start it with `claude --chrome`) | ⚠️ With browser integration, same as the side panel. With Playwright instead, login usually needs separate handling | ✅ | Teams that want one version for everyone, the hook, or local files |
+| **claude.ai** web or app, `.skill` only | ❌ Without browser integration it can't see your tabs; only what you paste in | ❌ | ❌ | Test design from pasted requirements only |
 
 So the combination that works best is **browser integration + this skill**. Installing it as a plugin adds reliability and version control on top. It doesn't make Claude read better.
 
 ## Install
 
-There are two ways to install it. **For a team, use the plugin.** For a quick try in the Chrome side panel, the `.skill` file is enough.
+There are two ways to install it. For the Chrome side panel, the main way to run it, upload the `.skill` file (Option B). For a team on Claude Code or Cowork, install the plugin (Option A) to get the hook and one version for everyone.
 
 ### Plugin vs `.skill`
 
