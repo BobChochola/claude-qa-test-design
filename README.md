@@ -97,6 +97,31 @@ The plugin isn't a smarter Claude. It's a way of packaging the same skill: same 
 
 So the combination that works best is **browser integration + this skill**. Installing it as a plugin adds reliability and version control on top. It doesn't make Claude read better.
 
+### Why not just use Playwright?
+
+Claude Code with Playwright can do this too. The difference is the login.
+
+**Playwright opens a fresh browser every time**, with none of your sessions or cookies. To read Jira, Notion and staging, it first has to get past login:
+
+- **SSO and 2FA** on every run, or a script to handle them.
+- **Saved login state** (`storageState`) expires, and it means storing a session for your company's systems in a file. Many security policies don't allow that.
+- **Shared test accounts** see a different scope than you do.
+
+**Claude in Chrome uses the Chrome you're already logged into.** It sees what you see, with your permissions and no more. Nothing extra to set up, no tokens stored.
+
+| | Claude in Chrome | Claude Code + Playwright |
+|---|---|---|
+| Login | Uses your existing session | You handle SSO, 2FA and sessions |
+| What it reads | Whatever you drag into the tab group | URLs you give it, or what it finds on its own |
+| Visibility | Runs in your browser; you can watch and step in | Usually headless; you see the result afterwards |
+| Setup | One line in the side panel | Node, MCP config, a terminal |
+| Best for | First-pass test design and exploratory testing on a new ticket | Repeatable regression tests, CI, running at scale |
+
+Two things worth knowing:
+
+1. **They don't compete.** Claude Code started with `--chrome` uses the same browser integration and works the same way. What matters isn't Claude Code vs. the side panel; it's your real browser session vs. a fresh automated one. The skill itself also uses Playwright to download and parse attachments.
+2. **For regression automation, Playwright is the better tool.** This skill covers the first pass on a new ticket: read the requirements, design the tests, run them once. Once the feature is stable, turn the key cases into Playwright tests in CI.
+
 ## Install
 
 There are two ways to install it. For the Chrome side panel, the main way to run it, upload the `.skill` file (Option B). For a team on Claude Code or Cowork, install the plugin (Option A) to get the hook and one version for everyone.
