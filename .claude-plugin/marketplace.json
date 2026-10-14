@@ -1,0 +1,14 @@
+{
+  "name": "claude-qa-test-design",
+  "description": "QA test design skill for Claude: requirements in, test cases out.",
+  "owner": {
+    "name": "Bob Chen"
+  },
+  "plugins": [
+    {
+      "name": "qa-test-design",
+      "source": "./",
+      "description": "Design QA test cases from requirements in a Chrome tab group and deliver them as a spreadsheet."
+    }
+  ]
+}

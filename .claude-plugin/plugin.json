@@ -1,0 +1,10 @@
+{
+  "name": "qa-test-design",
+  "version": "1.0.0",
+  "description": "Design QA test cases from Jira, Notion and Google Sheets in a Chrome tab group: read every comment, linked ticket, image and attachment, ask all questions in one round, then deliver a spreadsheet of test cases (and optionally run them).",
+  "author": {
+    "name": "Bob Chen"
+  },
+  "license": "MIT",
+  "keywords": ["qa", "testing", "test-cases", "jira", "notion", "chrome"]
+}
